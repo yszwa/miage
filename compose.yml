@@ -1,0 +1,22 @@
+version: '3'
+services:
+  voicevox:
+    image: 'voicevox/voicevox_engine:nvidia-ubuntu20.04-latest'
+    ports:
+      - '50021:50021'
+    deploy:
+      resources:
+        reservations:
+          devices:
+           - driver: nvidia
+             capabilities: [utility, compute, video]
+  bot:
+    build: bot/
+    ports:
+      - '3000:3000'
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      DB_URI: ${DB_URI}
+    volumes:
+      - ./db.json:/app/db.json
+      - ./dict.json:/app/dict.json
